@@ -28,23 +28,10 @@ class DownloadController: UIViewController {
         
         activityIndicator.hidesWhenStopped = true
         activityIndicator.startAnimating()
+        //TODO: Create an instance of TransferUtility
+        //TODO: Create a expression instance to update progress
+        //TODO: Request to download the data from S3
         
-        let transferUtility = AWSS3TransferUtility.default()
-        let expression = AWSS3TransferUtilityDownloadExpression()
-        expression.progressBlock = {(task, progress) in DispatchQueue.main.async(execute: {
-            self.progressBar.progress = Float(progress.fractionCompleted)
-            self.label.text = "\(Int(progress.fractionCompleted * 100)) %"
-        })
-        }
-        
-        transferUtility.downloadData(fromBucket: s3Bucket, key: s3Key, expression: expression) { (task, url, data, error) in
-            if let error = error{
-                print(error)
-            }
-            DispatchQueue.main.async(execute: { 
-                self.image = UIImage(data: data!)!
-            })
-        }
     }
     func updateUI(){
         label.text = "Done!"
